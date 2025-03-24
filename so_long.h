@@ -6,7 +6,7 @@
 /*   By: abdelilah <abdelilah@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 14:32:45 by abdelilah         #+#    #+#             */
-/*   Updated: 2025/03/24 14:32:48 by abdelilah        ###   ########.fr       */
+/*   Updated: 2025/03/24 14:49:09 by abdelilah        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,17 @@ int validate_map(t_map *map);
 int check_path(t_map *map);
 void free_map(t_map *map);
 
+/* Map reading */
+char *read_entire_file(char *filename);
+char *reading(char *content, char *buffer, int fd, int bytes_read);
+
 /* Error handling */
 void error_msg(char *message);
 int check_file_extension(char *filename);
+
+/* Carbage collector */
+void map_error(t_map *map, char *message);
+void free_map(t_map *map);
 
 /* Utils */
 char *ft_strjoin(char *s1, char *s2);

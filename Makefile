@@ -6,6 +6,8 @@ RM = rm -f
 SRCS = main.c \
 	   map_parse.c \
 	   map_validate.c \
+	   map_render.c \
+	   carbage_collector.c \
 	   utils.c
 OBJS = $(SRCS:.c=.o)
 all: $(NAME)

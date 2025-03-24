@@ -6,7 +6,7 @@
 /*   By: abdelilah <abdelilah@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 14:32:55 by abdelilah         #+#    #+#             */
-/*   Updated: 2025/03/24 14:32:57 by abdelilah        ###   ########.fr       */
+/*   Updated: 2025/03/24 14:47:53 by abdelilah        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,19 +20,6 @@ int	ft_strlen(const char *s)
 	while (s[i])
 		i++;
 	return (i);
-}
-
-void free_map(t_map *map)
-{
-    int i;
-
-    if (!map->grid)
-        return;
-    i = 0;
-    while (map->grid[i])
-        free(map->grid[i++]);
-    free(map->grid);
-    map->grid = NULL;
 }
 
 char	*ft_strjoin(char *s1, char *s2)
