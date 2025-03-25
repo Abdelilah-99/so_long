@@ -6,7 +6,7 @@
 /*   By: abdelilah <abdelilah@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 14:32:55 by abdelilah         #+#    #+#             */
-/*   Updated: 2025/03/24 14:47:53 by abdelilah        ###   ########.fr       */
+/*   Updated: 2025/03/25 15:38:47 by abdelilah        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,25 +27,18 @@ char	*ft_strjoin(char *s1, char *s2)
 	char	*result;
 	int		i;
 	int		j;
-	int		len1;
-	int		len2;
 
 	if (!s1 || !s2)
 		return (NULL);
-	len1 = ft_strlen(s1);
-	len2 = ft_strlen(s2);
-	result = malloc(sizeof(char) * (len1 + len2 + 1));
+	result = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
 	if (!result)
 		return (NULL);
-	i = 0;
-	while (s1[i])
-	{
+	i = -1;
+	while (s1[++i])
 		result[i] = s1[i];
-		i++;
-	}
-	j = 0;
-	while (s2[j])
-		result[i++] = s2[j++];
+	j = -1;
+	while (s2[++j])
+		result[i++] = s2[j];
 	result[i] = '\0';
 	return (result);
 }
@@ -69,17 +62,29 @@ static int	count_words(char const *s, char c)
 	return (count);
 }
 
-static int	word_length(char const *s, char c, int i)
+static char	*get_next_word(char const *s, char c, int *i)
 {
-	int	len;
+	char	*word;
+	int		len;
+	int		j;
 
+	while (s[*i] == c)
+		(*i)++;
 	len = 0;
-	while (s[i] && s[i] != c)
-	{
+	while (s[*i + len] && s[*i + len] != c)
 		len++;
-		i++;
+	word = malloc(sizeof(char) * (len + 1));
+	if (!word)
+		return (NULL);
+	j = 0;
+	while (j < len)
+	{
+		word[j] = s[*i];
+		j++;
+		(*i)++;
 	}
-	return (len);
+	word[j] = '\0';
+	return (word);
 }
 
 char	**ft_split(char const *s, char c)
@@ -87,8 +92,6 @@ char	**ft_split(char const *s, char c)
 	char	**result;
 	int		i;
 	int		j;
-	int		k;
-	int		word_len;
 
 	if (!s)
 		return (NULL);
@@ -99,16 +102,10 @@ char	**ft_split(char const *s, char c)
 	j = 0;
 	while (j < count_words(s, c))
 	{
-		while (s[i] == c)
-			i++;
-		word_len = word_length(s, c, i);
-		result[j] = malloc(sizeof(char) * (word_len + 1));
+		result[j] = get_next_word(s, c, &i);
 		if (!result[j])
 			return (NULL);
-		k = 0;
-		while (k < word_len)
-			result[j][k++] = s[i++];
-		result[j++][k] = '\0';
+		j++;
 	}
 	result[j] = NULL;
 	return (result);

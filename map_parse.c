@@ -5,14 +5,14 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: abdelilah <abdelilah@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/24 14:32:35 by abdelilah         #+#    #+#             */
-/*   Updated: 2025/03/24 14:46:55 by abdelilah        ###   ########.fr       */
+/*   Created: 2025/03/24 15:14:08 by abouchik          #+#    #+#             */
+/*   Updated: 2025/03/25 15:49:22 by abdelilah        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-static void count_element(t_map *map, char element, int x, int y)
+static void	count_element(t_map *map, char element, int x, int y)
 {
 	if (element == 'C')
 		map->collectibles++;
@@ -34,10 +34,10 @@ static void count_element(t_map *map, char element, int x, int y)
 		map_error(map, "Invalid character in map");
 }
 
-static void analyze_map(t_map *map)
+void	analyze_map(t_map *map)
 {
-	int x;
-	int y;
+	int	x;
+	int	y;
 
 	y = 0;
 	while (y < map->height)
@@ -58,10 +58,10 @@ static void analyze_map(t_map *map)
 		map_error(map, "Map must contain exactly 1 player (P)");
 }
 
-static void check_walls(t_map *map)
+void	check_walls(t_map *map)
 {
-	int x;
-	int y;
+	int	x;
+	int	y;
 
 	y = 0;
 	while (y < map->height)
@@ -69,9 +69,9 @@ static void check_walls(t_map *map)
 		x = 0;
 		while (x < map->width)
 		{
-			if ((y == 0 || y == map->height - 1 ||
-				 x == 0 || x == map->width - 1) &&
-				map->grid[y][x] != '1')
+			if ((y == 0 || y == map->height - 1
+					|| x == 0 || x == map->width - 1)
+				&& map->grid[y][x] != '1')
 				map_error(map, "Map must be surrounded by walls");
 			x++;
 		}
@@ -79,7 +79,7 @@ static void check_walls(t_map *map)
 	}
 }
 
-int init_data(t_map *map)
+int	init_data(t_map *map)
 {
 	if (!map)
 		return (0);
@@ -89,14 +89,23 @@ int init_data(t_map *map)
 	map->collectibles = 0;
 	map->exits = 0;
 	map->players = 0;
+	map->mlx = NULL;
+	map->win = NULL;
+	map->img0 = NULL;
+	map->img1 = NULL;
+	map->img_e = NULL;
+	map->img_c = NULL;
+	map->img_p = NULL;
+	map->player_pos.x = 0;
+	map->player_pos.y = 0;
+	map->c = 0;
+	map->on_exit = 0;
 	return (1);
 }
 
-int parse_map(t_map *map, char *filename)
+int	parse_map(t_map *map, char *filename)
 {
-	char *map_str;
-	int i;
-	int row_len;
+	char	*map_str;
 
 	if (!init_data(map))
 		return (0);
@@ -106,17 +115,7 @@ int parse_map(t_map *map, char *filename)
 	map->grid = ft_split(map_str, '\n');
 	free(map_str);
 	if (!map->grid)
-		return (0);
-	i = 0;
-	row_len = ft_strlen(map->grid[0]);
-	while (map->grid[i])
-	{
-		if (ft_strlen(map->grid[i++]) != row_len)
-			(free_map(map), map_error(map, "Map must be rectangular"));
-	}
-	map->height = i;
-	map->width = row_len;
-	analyze_map(map);
-	check_walls(map);
+		return (err("Error init grid"), 0);
+	first_step(map);
 	return (1);
 }

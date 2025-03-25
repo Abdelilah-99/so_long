@@ -1,32 +1,57 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   carbage_collector.c                                :+:      :+:    :+:   */
+/*   carbage_collector.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abdelilah <abdelilah@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/24 14:47:58 by abdelilah         #+#    #+#             */
-/*   Updated: 2025/03/24 14:48:12 by abdelilah        ###   ########.fr       */
+/*   Created: 2025/03/24 15:13:58 by abouchik          #+#    #+#             */
+/*   Updated: 2025/03/25 05:47:02 by abdelilah        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-void map_error(t_map *map, char *message)
+void	free_mlx_resources(t_map *map)
 {
-    free_map(map);
-    error_msg(message);
+	if (map->mlx)
+	{
+		if (map->img0)
+			mlx_destroy_image(map->mlx, map->img0);
+		if (map->img1)
+			mlx_destroy_image(map->mlx, map->img1);
+		if (map->img_c)
+			mlx_destroy_image(map->mlx, map->img_c);
+		if (map->img_e)
+			mlx_destroy_image(map->mlx, map->img_e);
+		if (map->img_p)
+			mlx_destroy_image(map->mlx, map->img_p);
+		if (map->win)
+		{
+			mlx_clear_window(map->mlx, map->win);
+			mlx_destroy_window(map->mlx, map->win);
+		}
+		mlx_destroy_display(map->mlx);
+		free(map->mlx);
+	}
 }
 
-void free_map(t_map *map)
+void	map_error(t_map *map, char *message)
 {
-    int i;
+	free_map(map);
+	err(message);
+}
 
-    if (!map->grid)
-        return;
-    i = 0;
-    while (map->grid[i])
-        free(map->grid[i++]);
-    free(map->grid);
-    map->grid = NULL;
+void	free_map(t_map *map)
+{
+	int	i;
+
+	if (!map->grid)
+		return ;
+	i = 0;
+	while (map->grid[i])
+		free(map->grid[i++]);
+	free_mlx_resources(map);
+	free(map->grid);
+	map->grid = NULL;
 }

@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: abdelilah <abdelilah@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/24 14:32:40 by abdelilah         #+#    #+#             */
-/*   Updated: 2025/03/24 14:32:43 by abdelilah        ###   ########.fr       */
+/*   Created: 2025/03/24 15:14:20 by abouchik          #+#    #+#             */
+/*   Updated: 2025/03/25 15:09:24 by abdelilah        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static void	flood_fill(char **temp_map, int x, int y, int *count)
 {
 	if (x < 0 || y < 0 || temp_map[y] == NULL || temp_map[y][x] == '\0'
 		|| temp_map[y][x] == '1' || temp_map[y][x] == 'V')
-		return;
+		return ;
 	if (temp_map[y][x] == 'C' || temp_map[y][x] == 'E')
 		(*count)++;
 	temp_map[y][x] = 'V';
@@ -25,9 +25,11 @@ static void	flood_fill(char **temp_map, int x, int y, int *count)
 	flood_fill(temp_map, x, y + 1, count);
 	flood_fill(temp_map, x, y - 1, count);
 }
-char **lets_make_a_map(t_map *map, char **temp_map)
+
+char	**lets_make_a_map(t_map *map, char **temp_map)
 {
-	int i, j;
+	int	i;
+	int	j;
 
 	i = 0;
 	while (i < map->height)
@@ -78,13 +80,13 @@ int	validate_map(t_map *map)
 {
 	if (map->width < 3 || map->height < 3)
 	{
-		error_msg("Map is too small");
+		err("Map is too small");
 		return (0);
 	}
 	if (!check_path(map))
 	{
 		free_map(map);
-		error_msg("No valid path to collect all collectibles and reach the exit");
+		err("No valid path to collect all collectibles and reach the exit");
 		return (0);
 	}
 	return (1);

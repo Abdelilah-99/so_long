@@ -1,55 +1,60 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   read_file.c                                        :+:      :+:    :+:   */
+/*   map_render.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abdelilah <abdelilah@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/24 14:43:30 by abdelilah         #+#    #+#             */
-/*   Updated: 2025/03/24 14:44:06 by abdelilah        ###   ########.fr       */
+/*   Created: 2025/03/25 05:30:54 by abdelilah         #+#    #+#             */
+/*   Updated: 2025/03/25 05:38:55 by abdelilah        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-char *reading(char *content, char *buffer, int fd, int bytes_read)
+int	exit_handler(t_map *map)
 {
-	char *temp;
-
-	while (bytes_read > 0)
-	{
-		buffer = malloc(BUFFER_SIZE + 1);
-		if (!buffer)
-			return (free(content), NULL);
-		bytes_read = read(fd, buffer, BUFFER_SIZE);
-		if (bytes_read < 0)
-			return (free(buffer), free(content), NULL);
-		buffer[bytes_read] = '\0';
-		temp = ft_strjoin(content, buffer);
-		free(buffer);
-		free(content);
-		content = temp;
-		if (!content)
-			return (NULL);
-	}
-	return (content);
+	free_map(map);
+	exit(EXIT_SUCCESS);
+	return (0);
 }
 
-char *read_entire_file(char *filename)
+void	ft_winner(t_map *map)
 {
-	char *buffer;
-	char *content;
-	int bytes_read;
-	int fd;
+	free_map(map);
+	ft_putstr_fd("🎉 Congratulations! You won the game! 🎉\n", 1);
+	exit(EXIT_SUCCESS);
+}
 
-	fd = open(filename, O_RDONLY);
-	if (fd < 0)
-		return (NULL);
-	content = malloc(1);
-	if (!content)
-		return (NULL);
-	content[0] = '\0';
-	bytes_read = 1;
-	buffer = NULL;
-	return (reading(content, buffer, fd, bytes_read));
+void	handle_key(int key, t_map *map)
+{
+	if (key == KEY_ESC)
+	{
+		free_map(map);
+		exit(EXIT_SUCCESS);
+	}
+	else if (key == KEY_UP)
+		applied_mov(map, 0, -1);
+	else if (key == KEY_DOWN)
+		applied_mov(map, 0, 1);
+	else if (key == KEY_LEFT)
+		applied_mov(map, -1, 0);
+	else if (key == KEY_RIGHT)
+		applied_mov(map, 1, 0);
+}
+
+int	event_listner(int key, t_map *map)
+{
+	handle_key(key, map);
+	return (0);
+}
+
+void	render_game(t_map *map)
+{
+	init_window(map);
+	load_img(map);
+	make_your_game(map);
+	mlx_key_hook(map->win, event_listner, map);
+	mlx_hook(map->win, 17, 0, exit_handler, map);
+	mlx_loop(map->mlx);
 }
