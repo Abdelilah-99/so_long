@@ -1,6 +1,6 @@
 # so_long: 2D game with MiniLibX
 
-A small top-down **2D game** in C using the **MiniLibX** graphics library: collect every item, then
+A project from **1337** (42 network): a small top-down **2D game** in C using the **MiniLibX** graphics library: collect every item, then
 reach the exit.
 
 ## Features
